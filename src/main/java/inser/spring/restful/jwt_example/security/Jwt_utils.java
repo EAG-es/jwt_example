@@ -1,17 +1,19 @@
 package inser.spring.restful.jwt_example.security;
 
+import inser.spring.restful.jwt_example.component.JsonsComponent;
+import innui.modelos.errors.Oks;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.crypto.SecretKey;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -24,10 +26,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class Jwt_utils {
     public static final String k_mapping_jwt_user = "/jwt_user";
+    public static final String k_matcher_jwt_user = "/jwt_user/**";
     public static final String k_mapping_public = "/public";   
-    public static final String k_user_tex = "user";
-    public static final String k_password_tex = "password";
-    
+    public static final String k_matcher_public = "/public/**";   
+    @Autowired
+    public JsonsComponent jsonComponent;
     @Value(value = "${jwt.header}")
     public String k_header;
     @Value(value = "${jwt.prefix}")
@@ -88,5 +91,25 @@ public class Jwt_utils {
         return retorno;
     }
 
-
+    public static LinkedHashMap<String, Object> get_claims_map(String jwt_token, Jwt_utils jwt_util, Oks ok, Object ... extras_array) throws Exception {
+        if (ok.is == false) { return null; }
+        LinkedHashMap<String, Object> retorno = null;
+        Claims claim;
+//        ResourceBundle in;
+//        in = ResourceBundles.getBundle(k_in_route);
+        try {
+            claim = get_claims(jwt_token, jwt_util);
+            retorno = new LinkedHashMap<>();
+            retorno.putAll(claim);
+            String subject = claim.getSubject();
+            if (subject != null && subject.isBlank() == false) {
+                LinkedHashMap<String, Object> subject_map;
+                subject_map = jwt_util.jsonComponent.convert_to_map(subject, ok);
+                retorno.putAll(subject_map);
+            }
+        } catch (Exception e) {
+            ok.setTxt(e);
+        }
+        return retorno;
+    }
 }

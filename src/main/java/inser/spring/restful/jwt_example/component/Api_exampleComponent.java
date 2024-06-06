@@ -1,6 +1,6 @@
 package inser.spring.restful.jwt_example.component;
 
-import innui.jwt_example.Api_json;
+import innui.jwt_example.Api_example;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
  * @author emilio
  */
 @Component
-public class Api_jsonComponent extends Api_json {
+public class Api_exampleComponent extends Api_example {
     
 }

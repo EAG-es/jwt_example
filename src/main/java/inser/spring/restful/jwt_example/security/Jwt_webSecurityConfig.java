@@ -8,8 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import static inser.spring.restful.jwt_example.security.Jwt_utils.k_mapping_jwt_user;
-import static inser.spring.restful.jwt_example.security.Jwt_utils.k_mapping_public;
+import static inser.spring.restful.jwt_example.security.Jwt_utils.k_matcher_jwt_user;
+import static inser.spring.restful.jwt_example.security.Jwt_utils.k_matcher_public;
 
 /**
  *
@@ -28,9 +28,9 @@ class Jwt_webSecurityConfig {
           .addFilterAfter(new Jwt_authorizationFilter(k_webSecurity_properties), UsernamePasswordAuthenticationFilter.class)
           .authorizeHttpRequests(request -> {
               request.requestMatchers(HttpMethod.POST
-                , k_mapping_jwt_user)
+                , k_matcher_jwt_user)
                 .permitAll()
-                .requestMatchers(k_mapping_public)
+                .requestMatchers(k_matcher_public)
                 .permitAll()
                 .anyRequest()
                 .authenticated();              

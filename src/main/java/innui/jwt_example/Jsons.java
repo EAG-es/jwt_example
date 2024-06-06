@@ -28,7 +28,52 @@ public class Jsons extends Bases {
         k_in_route = "in/" + paquete_tex + "/in";
     }
     public ObjectMapper objectMapper = null;
-
+    /**
+     * 
+     * @param ok
+     * @param extras_array
+     * @return
+     * @throws Exception 
+     */
+    public boolean init(Oks ok, Object ... extras_array) throws Exception {
+//        ResourceBundle in;
+//        in = ResourceBundles.getBundle(k_in_route);
+        try {            
+            _default_builder(ok);
+            if (ok.is == false) { return false; }
+        } catch (Exception e) {
+            ok.setTxt(e);            
+        }
+        return ok.is;
+    }
+    /**
+     * 
+     * @param ok
+     * @param extras_array
+     * @return
+     * @throws Exception 
+     */
+    public ObjectMapper getObjectMapper(Oks ok, Object ... extras_array) throws Exception {
+//        ResourceBundle in;
+//        in = ResourceBundles.getBundle(k_in_route);
+        try {
+            if (objectMapper == null) {
+                _default_builder(ok);
+                if (ok.is == false) { return null; }
+            }        
+            return objectMapper;
+        } catch (Exception e) {
+            ok.setTxt(e);
+            return null;
+        } 
+    }
+    /**
+     * 
+     * @param ok
+     * @param extras_array
+     * @return
+     * @throws Exception 
+     */
     public boolean _default_builder(Oks ok, Object ... extras_array) throws Exception {
         objectMapper = JsonMapper.builder()
                 .build();
