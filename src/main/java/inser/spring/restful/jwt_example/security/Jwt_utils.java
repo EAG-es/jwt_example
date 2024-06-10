@@ -53,18 +53,18 @@ public class Jwt_utils {
         return string_256;
     }
 
-    public static String get_jwt_token(String text, Jwt_utils jwt_util) {
+    public String get_jwt_token(String text) {
         List<GrantedAuthority> grantedAuthorities_list = AuthorityUtils
-                .commaSeparatedStringToAuthorityList(jwt_util.k_role_user);
+                .commaSeparatedStringToAuthorityList(k_role_user);
         String secret_key_arranged;
-        secret_key_arranged = arrange_key(jwt_util.k_secretKey);
+        secret_key_arranged = arrange_key(k_secretKey);
         SecretKey secret = Keys.hmacShaKeyFor(secret_key_arranged.getBytes(StandardCharsets.UTF_8)); // Keys.password(string_256.toCharArray());
         Stream<GrantedAuthority> grantedAuthorities_stream = grantedAuthorities_list.stream();
         long current_time_ms = System.currentTimeMillis();
-        long expiration_time_ms = current_time_ms + Long.parseLong(jwt_util.k_expiration_ms_to_add);
+        long expiration_time_ms = current_time_ms + Long.parseLong(k_expiration_ms_to_add);
         String token = Jwts
           .builder()
-          .id(jwt_util.k_id)
+          .id(k_id)
           .subject(text)
           .claim("authorities"
             , grantedAuthorities_stream.map(GrantedAuthority::getAuthority)
@@ -74,15 +74,15 @@ public class Jwt_utils {
           .signWith(secret).compact();
 //        .secretKey.getBytes()).compact();
 
-        return jwt_util.k_prefix + token;
+        return k_prefix + token;
     }
     
-    public static Claims get_claims(String jwt_token, Jwt_utils jwt_util) {
+    public Claims get_claims(String jwt_token) {
         Claims retorno = null;
-        jwt_token = jwt_token.replace(jwt_util.k_prefix, "");
+        jwt_token = jwt_token.replace(k_prefix, "");
 //	retorno = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
         String secret_key_arranged;
-        secret_key_arranged = arrange_key(jwt_util.k_secretKey);
+        secret_key_arranged = arrange_key(k_secretKey);
         SecretKey secret = Keys.hmacShaKeyFor(secret_key_arranged.getBytes(StandardCharsets.UTF_8));
         JwtParser jwtParser = Jwts.parser()
           .verifyWith(secret)
@@ -91,20 +91,20 @@ public class Jwt_utils {
         return retorno;
     }
 
-    public static LinkedHashMap<String, Object> get_claims_map(String jwt_token, Jwt_utils jwt_util, Oks ok, Object ... extras_array) throws Exception {
+    public LinkedHashMap<String, Object> get_claims_map(String jwt_token, Oks ok, Object ... extras_array) throws Exception {
         if (ok.is == false) { return null; }
         LinkedHashMap<String, Object> retorno = null;
         Claims claim;
 //        ResourceBundle in;
 //        in = ResourceBundles.getBundle(k_in_route);
         try {
-            claim = get_claims(jwt_token, jwt_util);
+            claim = get_claims(jwt_token);
             retorno = new LinkedHashMap<>();
             retorno.putAll(claim);
             String subject = claim.getSubject();
             if (subject != null && subject.isBlank() == false) {
                 LinkedHashMap<String, Object> subject_map;
-                subject_map = jwt_util.jsonComponent.convert_to_map(subject, ok);
+                subject_map = jsonComponent.convert_to_map(subject, ok);
                 retorno.putAll(subject_map);
             }
         } catch (Exception e) {

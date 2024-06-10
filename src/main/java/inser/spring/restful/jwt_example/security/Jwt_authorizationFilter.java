@@ -1,6 +1,5 @@
 package inser.spring.restful.jwt_example.security;
 
-import static inser.spring.restful.jwt_example.security.Jwt_utils.get_claims;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -50,7 +49,7 @@ public class Jwt_authorizationFilter extends OncePerRequestFilter {
 
     public Claims validate_token(HttpServletRequest request) {
         String jwtToken = request.getHeader(jwt_util.k_header);
-        return get_claims(jwtToken, jwt_util);
+        return jwt_util.get_claims(jwtToken);
     }
 
     /**

@@ -4,7 +4,6 @@ import innui.modelos.configurations.Initials;
 import inser.spring.restful.jwt_example.component.SessionsComponent;
 import innui.modelos.errors.Oks;
 import innui.jwt_example.Api_example;
-import innui.jwt_example.Jsons;
 import innui.jwt_example.Jwt_user;
 import innui.modelos.configurations.ResourceBundles;
 import innui.modelos.internacionalization.Tr;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import static inser.spring.restful.jwt_example.controller.K_names.k_last_map_tex;
 import inser.spring.restful.jwt_example.security.Jwt_utils;
-import static inser.spring.restful.jwt_example.security.Jwt_utils.get_claims_map;
 import java.util.LinkedHashMap;
 import java.util.ResourceBundle;
 import org.springframework.util.MultiValueMap;
@@ -90,7 +88,7 @@ public class Api_exampleController {
 //                in_map = jsonComponent.convert_to_map(json_tex, ok);
                 String jwt_util_k_header = headers.getFirst(jwt_util.k_header);
                 if (ok.no_nul(k_in_route, Tr.in(in, "Not found header: ") + jwt_util.k_header) == false) { break; }
-                jwt_uset_map = get_claims_map(jwt_util_k_header, jwt_util, ok);
+                jwt_uset_map = jwt_util.get_claims_map(jwt_util_k_header, ok);
                 if (ok.is == false) { break; }
                 in_map.putAll(jwt_uset_map);
                 in_map.put(Jwt_user.k_token_tex, jwt_util_k_header);

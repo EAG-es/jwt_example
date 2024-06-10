@@ -11,7 +11,6 @@ import static innui.jwt_example.Jwt_user.k_user_tex;
 import innui.modelos.errors.Oks;
 import inser.spring.restful.jwt_example.component.JsonsComponent;
 import inser.spring.restful.jwt_example.security.Jwt_utils;
-import static inser.spring.restful.jwt_example.security.Jwt_utils.get_jwt_token;
 import org.springframework.beans.factory.annotation.Autowired;
 import static inser.spring.restful.jwt_example.security.Jwt_utils.k_mapping_jwt_user;
 import org.springframework.http.HttpStatus;
@@ -55,7 +54,7 @@ public class Jwt_user_authorizeController {
                 ObjectMapper objectMapper = jsonsComponent.getObjectMapper(ok);
                 if (ok.is == false) { break; }
                 String jw_user_tex = objectMapper.writeValueAsString(jw_user);
-                String token = get_jwt_token(jw_user_tex, jwt_util);
+                String token = jwt_util.get_jwt_token(jw_user_tex);
                 jw_user.setToken(token);
                 retorno = new ResponseEntity<>(jw_user, HttpStatus.OK);
             } catch (Exception e) {
